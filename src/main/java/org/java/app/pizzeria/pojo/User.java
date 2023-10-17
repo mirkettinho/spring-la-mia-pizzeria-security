@@ -1,37 +1,51 @@
 package org.java.app.pizzeria.pojo;
 
-import java.util.Set;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+
 
 @Entity
-@Table(name = "utenti")
-public class User {
+public class User implements UserDetails{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	private String nome;
-	private String cognome;
-	
 	@Column(unique = true)
-	private String email;
+	private String username;
 	
 	@Column(nullable = false)
 	private String password;
 	
 	
-	@ManyToMany
-	private Set<Role> ruoli;
+	@ManyToMany(fetch = FetchType.EAGER)
+	private List<Role> roles;
 
 
+	public User() {}
+	
+	public User(String username, String password, Role... roles) {
+		
+		setUsername(username);
+		setPassword(password);
+		setRoles(Arrays.asList(roles));
+	}
+	
 	/// get and set
 	
 	
@@ -45,33 +59,13 @@ public class User {
 	}
 
 
-	public String getNome() {
-		return nome;
+	public String getUsername() {
+		return username;
 	}
 
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-
-	public String getCognome() {
-		return cognome;
-	}
-
-
-	public void setCognome(String cognome) {
-		this.cognome = cognome;
-	}
-
-
-	public String getEmail() {
-		return email;
-	}
-
-
-	public void setEmail(String email) {
-		this.email = email;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 
@@ -85,14 +79,45 @@ public class User {
 	}
 
 
-	public Set<Role> getRuoli() {
-		return ruoli;
+	public List<Role> getRoles() {
+		return roles;
 	}
 
 
-	public void setRuoli(Set<Role> ruoli) {
-		this.ruoli = ruoli;
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
 	}
 		
 	
+	@Override
+	public String toString() {
+		return "[" + getId() + "]" + getUsername();
+	}
+	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+
+		return getRoles().stream()
+				.map(r -> new SimpleGrantedAuthority(
+									r.getName()
+								)
+				).toList();
+	}
+
+	@Override 
+	public boolean isAccountNonExpired() { 
+		return true; 
+	}
+	@Override 
+	public boolean isAccountNonLocked() { 
+		return true; 
+	}
+	@Override 
+	public boolean isCredentialsNonExpired() { 
+		return true; 
+	}
+	@Override 
+	public boolean isEnabled() { 
+		return true; 
+	}
 }

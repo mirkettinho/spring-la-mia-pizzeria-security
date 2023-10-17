@@ -5,6 +5,7 @@ package org.java.app.pizzeria.serv;
 import java.util.List;
 
 import org.java.app.pizzeria.pojo.Offerte;
+import org.java.app.pizzeria.pojo.Pizza;
 import org.java.app.pizzeria.repo.OfferteRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,15 @@ public class OffertaServ {
 	public Offerte findById(Integer id) {
 		
 		return offerteRepo.findById(id).get();
+	}
+	
+	public void delete(Offerte offerte) {
+		
+		offerteRepo.delete(offerte);
+	}
+	
+	public List<Offerte> findByPizza(Pizza pizza) {
+		
+		return offerteRepo.findByPizza(pizza);
 	}
 }

@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "ruoli")
 public class Role {
 	
 	@Id
@@ -18,6 +17,13 @@ public class Role {
 	@Column(unique = true)
 	private String name;
 
+	
+	public Role() {}
+
+	public Role(String name) {
+		
+		setName(name);
+	}
 	
 	/// get and set
 	
@@ -38,5 +44,9 @@ public class Role {
 		this.name = name;
 	}
 	
+	@Override
+	public String toString() {
+		return "[" + getId() + "]" + getName();
+	}
 	
 }

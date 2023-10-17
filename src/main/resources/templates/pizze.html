@@ -19,7 +19,7 @@
 	        <li class="nav-item">
 	          <a class="nav-link active" aria-current="page" href="/">Home</a>
 	        </li>
-	        <li class="nav-item">
+	        <li class="nav-item" sec:authorize="hasAnyAuthority('admin')">
 	          <a class="nav-link text-white" th:href="@{/pizza/create}">Nuova Pizza</a>
 	        </li>
 	      </ul>
@@ -37,7 +37,7 @@
 		
 		<h1 class="mb-3 mt-5" style="font-size: 100px;">Pizze</h1>
 		
-		<a th:href="@{/pizza/create}" class="btn btn-primary mb-3">Crea una nuova pizza</a>
+		<a th:href="@{/pizza/create}" class="btn btn-primary mb-3" sec:authorize="hasAnyAuthority('admin')">Crea una nuova pizza</a>
 		<div class="d-flex justify-content-center">
 			
 			<!-- TABLE -->
@@ -56,9 +56,9 @@
 			      <th scope="row">[[*{id}]]</th>
 			      <td>[[*{name}]]</td>
 			      <td><a th:href="@{pizza-details/{id}(id=*{id})}" class="btn btn-primary">Vai</a></td>
-			      <td><a th:href="@{/pizza/update/{id}(id=*{id})}" class="btn btn-warning">Modifica</a></td>
+			      <td><a th:href="@{/pizza/update/{id}(id=*{id})}" class="btn btn-warning" sec:authorize="hasAnyAuthority('admin')">Modifica</a></td>
 				  <td>
-					<form th:action="@{/pizza/delete/{id}(id=*{id})}" method="POST" style="display: inline;" >		
+					<form th:action="@{/pizza/delete/{id}(id=*{id})}" method="POST" style="display: inline;"  sec:authorize="hasAnyAuthority('admin')">		
 						<input class="btn btn-danger" type="submit"  value="Elimina" >
 					</form>
 				  </td>

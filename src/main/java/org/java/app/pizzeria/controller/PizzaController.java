@@ -5,8 +5,10 @@ package org.java.app.pizzeria.controller;
 import java.util.List;
 
 import org.java.app.pizzeria.pojo.Ingredienti;
+import org.java.app.pizzeria.pojo.Offerte;
 import org.java.app.pizzeria.pojo.Pizza;
 import org.java.app.pizzeria.serv.IngredienteServ;
+import org.java.app.pizzeria.serv.OffertaServ;
 import org.java.app.pizzeria.serv.PizzaServ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +31,9 @@ public class PizzaController {
 	
 	@Autowired
 	private IngredienteServ ingredienteServ;
+	
+	@Autowired
+	private OffertaServ offertaServ;
 	
 	@GetMapping("/")
 	public String getIndex(@RequestParam(required = false) String searchInput,	Model model) {
@@ -103,6 +108,12 @@ public class PizzaController {
 	public String deletePizza(@PathVariable int id) {
 		
 			Pizza pizza = pizzaServ.findById(id);
+			
+			List<Offerte> offerte = offertaServ.findByPizza(pizza);
+		    for (Offerte offerta : offerte) {
+		    	offertaServ.delete(offerta);
+		    }
+		    
 			pizzaServ.deletePizza(pizza);
 			
 			return "redirect:/";
